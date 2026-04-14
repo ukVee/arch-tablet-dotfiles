@@ -1,0 +1,17 @@
+[tn]
+bg       = "1a1b26"
+bg_dark  = "16161e"
+bg_hl    = "292e42"
+
+fg       = "c0caf5"
+fg_dark  = "a9b1d6"
+comment  = "565f89"
+
+purple   = "bb9af7"
+violet   = "9d7cd8"
+blue     = "7aa2f7"
+cyan     = "7dcfff"
+green    = "9ece6a"
+yellow   = "e0af68"
+orange   = "ff9e64"
+red      = "f7768e"

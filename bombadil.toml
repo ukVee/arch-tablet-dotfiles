@@ -1,0 +1,23 @@
+dotfiles_dir = "dotfiles"
+
+[settings]
+vars = ["vars/tokyo-night-dark.toml"]
+
+[settings.dots]
+bashrc       = { source = "src/bashrc",       target = ".bashrc" }
+bash_profile = { source = "src/bash_profile", target = ".bash_profile" }
+git_ignore   = { source = "src/git/ignore",   target = ".config/git/ignore" }
+waybar       = { source = "src/waybar",       target = ".config/waybar" }
+wayfire      = { source = "src/wayfire.ini",  target = ".config/wayfire.ini" }
+wf_shell_ini = { source = "src/wf-shell.ini", target = ".config/wf-shell.ini" }
+wf_shell     = { source = "src/wf-shell",     target = ".config/wf-shell" }
+# systemd configurations
+systemd_hibernate = { source = "src/system/systemd/suspend-then-hibernate/10-surface.conf", target = "/etc/systemd/sleep.conf.d/10-surface.conf" }
+systemd_power_lid = { source = "src/system/systemd/lid_powerbtn_behavior/10-surface.conf",  target = "/etc/systemd/logind.conf.d/10-surface.conf" }
+# acpi lid handler (SW_LID workaround for Surface Go 3)
+acpi_lid_event    = { source = "src/system/acpi/events/lid-close",                   target = "/etc/acpi/events/lid-close" }
+acpi_lid_action   = { source = "src/system/acpi/lid-close.sh",                       target = "/usr/local/bin/lid-close.sh" }
+
+
+[profiles.light]
+vars = ["vars/tokyo-night-light.toml"]

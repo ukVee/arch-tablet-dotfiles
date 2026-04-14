@@ -1,0 +1,17 @@
+* {
+    font-family: monospace;
+    font-size: 14px;
+    color: #{{tn.fg}};
+}
+window#waybar {
+    background: #{{tn.bg}}e6;
+}
+#workspaces button {
+    padding: 0 5px;
+}
+#workspaces button.active {
+    color: #{{tn.purple}};
+}
+#clock, #battery, #network {
+    padding: 0 10px;
+}
