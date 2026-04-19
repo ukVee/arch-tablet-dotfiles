@@ -11,6 +11,7 @@ waybar       = { source = "src/waybar",       target = ".config/waybar" }
 wayfire      = { source = "src/wayfire.ini",  target = ".config/wayfire.ini" }
 wf_shell_ini = { source = "src/wf-shell.ini", target = ".config/wf-shell.ini" }
 wf_shell     = { source = "src/wf-shell",     target = ".config/wf-shell" }
+gtklock      = { source = "src/gtklock",      target = ".config/gtklock" }
 # systemd configurations
 systemd_hibernate = { source = "src/system/systemd/suspend-then-hibernate/10-surface.conf", target = "/etc/systemd/sleep.conf.d/10-surface.conf" }
 systemd_power_lid = { source = "src/system/systemd/lid_powerbtn_behavior/10-surface.conf",  target = "/etc/systemd/logind.conf.d/10-surface.conf" }
