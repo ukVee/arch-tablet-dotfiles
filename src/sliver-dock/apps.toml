@@ -5,6 +5,7 @@ pinned = [
   "com.libretro.RetroArch",
   "com.valvesoftware.SteamLink",
   "vesktop",
+  "flycast"
 ]
 
 # Hide everything else from the default-visible roster so only the pinned six
