@@ -1,0 +1,72 @@
+#!/bin/bash
+# NetworkManager dispatcher — weather-core location resolver.
+#
+# On every network "up" event:
+#   - Read the current SSID
+#   - Look it up in /etc/weather-core/ssid-map
+#   - If found with non-empty value → write that lat,lon to the user's
+#     weather-core location override file
+#   - Otherwise → query ipinfo.io/loc and write the result
+#
+# Runs as root. Chowns the override back to the tablet user so weather-core
+# (running as that user) can re-read it on the next refresh.
+
+set -eu
+
+IFACE="${1:-}"
+ACTION="${2:-}"
+
+# Only run on up-ish events; skip down/pre-up/etc.
+case "$ACTION" in
+	up|connectivity-change|dhcp4-change|dhcp6-change) ;;
+	*) exit 0 ;;
+esac
+
+# Ignore non-wifi interfaces (wired connections aren't location-revealing).
+case "$IFACE" in
+	wl*|wlan*|wlp*) ;;
+	*) exit 0 ;;
+esac
+
+USER_NAME="ukv"
+USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+LOC_FILE="$USER_HOME/.config/weather-core/location"
+MAP_FILE="$USER_HOME/.config/weather-core/ssid-map"
+
+# iw is standard on Arch; nmcli is a fallback in case iw is missing.
+SSID="$(iw dev "$IFACE" link 2>/dev/null | awk -F': ' '/SSID/{print $2; exit}')"
+if [ -z "$SSID" ]; then
+	SSID="$(nmcli -t -f active,ssid dev wifi 2>/dev/null | awk -F: '$1=="yes"{print $2; exit}')"
+fi
+
+write_location() {
+	local loc="$1"
+	[ -z "$loc" ] && return 0
+	install -d -m 0755 -o "$USER_NAME" -g "$USER_NAME" "$(dirname "$LOC_FILE")"
+	local tmp="$LOC_FILE.tmp"
+	printf '%s\n' "$loc" > "$tmp"
+	chown "$USER_NAME:$USER_NAME" "$tmp"
+	chmod 0644 "$tmp"
+	mv "$tmp" "$LOC_FILE"
+	logger -t weather-location "SSID=$SSID → $loc"
+}
+
+mapped=""
+if [ -n "$SSID" ] && [ -f "$MAP_FILE" ]; then
+	mapped="$(awk -F= -v s="$SSID" '$1==s {sub(/^[^=]*=/, ""); print; exit}' "$MAP_FILE")"
+	# Strip trailing whitespace from the mapped value.
+	mapped="${mapped%"${mapped##*[![:space:]]}"}"
+fi
+
+if [ -n "$mapped" ]; then
+	write_location "$mapped"
+else
+	# Unknown SSID or explicit empty-value mapping → IP geolocation.
+	loc="$(curl -s --max-time 5 https://ipinfo.io/loc || true)"
+	loc="${loc%$'\n'}"
+	if [ -n "$loc" ]; then
+		write_location "$loc"
+	else
+		logger -t weather-location "SSID=$SSID, ipinfo lookup failed — leaving $LOC_FILE untouched"
+	fi
+fi

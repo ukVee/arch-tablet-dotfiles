@@ -7,6 +7,18 @@
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias SCL='cd ~/soft-fig_garden && claude'
+
+lt() {
+  local dir="${1:-.}"
+  local count
+  count=$(find "$dir" 2>/dev/null | head -n 2000 | wc -l)
+  if [ "$count" -ge 2000 ]; then
+    tree -L 2 "$dir"
+  else
+    tree "$dir"
+  fi
+}
 PS1='[\u@\h \W]\$ '
 eval "$(starship init bash)"
 export PATH="$HOME/.local/bin:$PATH"

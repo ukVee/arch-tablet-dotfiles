@@ -1,0 +1,14 @@
+# weather-core SSID → location map.
+# Read by the NetworkManager dispatcher (/etc/NetworkManager/dispatcher.d/
+# 50-weather-location) every time the tablet connects to a Wi-Fi network.
+#
+# Lives under ~/.config/weather-core/ssid-map (managed by bombadil). The
+# dispatcher reads it from the user's home — no root-owned copy needed.
+#
+# Format: SSID=lat,lon  (empty value triggers IP geolocation fallback)
+# Lines starting with '#' and blank lines are ignored. Match is exact.
+#
+# Edit this file then `bombadil link` to apply.
+
+default_wifi=41.803360, -71.885773
+mobileoto=

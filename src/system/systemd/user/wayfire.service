@@ -1,0 +1,12 @@
+[Unit]
+Description=Wayfire Wayland compositor
+Documentation=man:wayfire(1)
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/wayfire
+ExecStopPost=/usr/bin/systemctl --user stop wayfire-session.target graphical-session.target
+Restart=no
+TimeoutStopSec=10s

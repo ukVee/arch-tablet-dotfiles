@@ -1,7 +1,12 @@
 dotfiles_dir = "dotfiles"
-
+gpg_user_id = "ACBB11A6C1F3B6A7"
 [settings]
-vars = ["vars/tokyo-night-dark.toml"]
+vars = ["vars/tokyo-night-dark.toml", "vars/secrets.toml"]
+# weather-core refuses to load its config unless mode is 0600 — it contains
+# the Tomorrow.io API key (stored via `bombadil add-secret`). bombadil
+# re-renders the template on every `link`, resetting mode to 0644, so we
+# re-chmod as a posthook. Runs unprivileged as the invoking user.
+posthooks = ["chmod 0600 $HOME/.config/weather-core/config"]
 
 [settings.dots]
 bashrc       = { source = "src/bashrc",       target = ".bashrc" }
@@ -9,16 +14,27 @@ bash_profile = { source = "src/bash_profile", target = ".bash_profile" }
 git_ignore   = { source = "src/git/ignore",   target = ".config/git/ignore" }
 waybar       = { source = "src/waybar",       target = ".config/waybar" }
 wayfire      = { source = "src/wayfire.ini",  target = ".config/wayfire.ini" }
-wf_shell_ini = { source = "src/wf-shell.ini", target = ".config/wf-shell.ini" }
-wf_shell     = { source = "src/wf-shell",     target = ".config/wf-shell" }
 gtklock      = { source = "src/gtklock",      target = ".config/gtklock" }
+weather_core = { source = "src/weather-core", target = ".config/weather-core" }
+swipe_panel  = { source = "src/swipe-panel",  target = ".config/swipe-panel" }
+sliver_dock  = { source = "src/sliver-dock",  target = ".config/sliver-dock" }
 # systemd configurations
 systemd_hibernate = { source = "src/system/systemd/suspend-then-hibernate/10-surface.conf", target = "/etc/systemd/sleep.conf.d/10-surface.conf" }
 systemd_power_lid = { source = "src/system/systemd/lid_powerbtn_behavior/10-surface.conf",  target = "/etc/systemd/logind.conf.d/10-surface.conf" }
+systemd_autologin = { source = "src/system/systemd/tty1-autologin/autologin.conf",          target = "/etc/systemd/system/getty@tty1.service.d/autologin.conf" }
+# wayfire user-service launch path
+systemd_user_wayfire     = { source = "src/system/systemd/user/wayfire.service",                                  target = ".config/systemd/user/wayfire.service" }
+systemd_user_wf_session  = { source = "src/system/systemd/user/wayfire-session.target",                           target = ".config/systemd/user/wayfire-session.target" }
+systemd_user_swayidle    = { source = "src/system/systemd/user/swayidle.service",                                 target = ".config/systemd/user/swayidle.service" }
+systemd_user_polkit      = { source = "src/system/systemd/user/polkit-gnome-authentication-agent-1.service",      target = ".config/systemd/user/polkit-gnome-authentication-agent-1.service" }
+systemd_user_swipe_panel = { source = "src/system/systemd/user/swipe-panel.service",                              target = ".config/systemd/user/swipe-panel.service" }
+systemd_user_sliver_dock = { source = "src/system/systemd/user/sliver-dock.service",                              target = ".config/systemd/user/sliver-dock.service" }
+systemd_kill_user_procs  = { source = "src/system/systemd/kill_user_processes/20-kill-user-processes.conf",       target = "/etc/systemd/logind.conf.d/20-kill-user-processes.conf" }
+env_wayland              = { source = "src/system/environment.d/10-wayland.conf",                                 target = ".config/environment.d/10-wayland.conf" }
 # acpi lid handler (SW_LID workaround for Surface Go 3)
 acpi_lid_event    = { source = "src/system/acpi/events/lid-close",                   target = "/etc/acpi/events/lid-close" }
 acpi_lid_action   = { source = "src/system/acpi/lid-close.sh",                       target = "/usr/local/bin/lid-close.sh" }
 
 
 [profiles.light]
-vars = ["vars/tokyo-night-light.toml"]
+vars = ["vars/tokyo-night-light.toml", "vars/secrets.toml"]

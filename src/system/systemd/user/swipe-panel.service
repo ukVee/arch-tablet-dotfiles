@@ -1,0 +1,12 @@
+[Unit]
+Description=Swipe-panel gesture-driven drawer daemon
+Documentation=file://%h/projects/swipe-panel/CLAUDE.md
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/swipe-panel
+Restart=always
+RestartSec=2s

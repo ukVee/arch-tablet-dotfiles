@@ -1,0 +1,100 @@
+/* sliver-dock stylesheet — rendered by toml-bombadil.
+ *
+ * Palette flows in via the tn vars table; retheme by editing
+ * vars/tokyo-night-dark.toml (or -light) and re-running bombadil link.
+ * Class names are owned by sliver-dock-daemon (panel.rs) — grep there
+ * when adding a new widget.
+ *
+ * The bar itself is drawn in Cairo and theme-colored in Rust; this
+ * stylesheet only owns the GTK widgets we put inside popovers (Phase 6d:
+ * clock calendar + battery time-remaining label). The bar window node
+ * stays transparent — the spear is drawn into a Cairo surface, not a
+ * themed widget. */
+
+@define-color tn_bg #{{tn.bg}};
+@define-color tn_bg_hl #{{tn.bg_hl}};
+@define-color tn_fg #{{tn.fg}};
+@define-color tn_comment #{{tn.comment}};
+@define-color tn_purple #{{tn.purple}};
+@define-color tn_blue #{{tn.blue}};
+
+window.sliver-dock {
+    background: transparent;
+}
+
+/* Popover surface for the info-section taps. autohide is true so the
+ * popover closes on click-out; we only style the chrome.
+ *
+ * GTK4 popovers expose three subnodes: arrow, contents, and the popover
+ * node itself (which we leave transparent so the desktop shows through
+ * the corners). */
+popover.sliver-dock-popover {
+    background: transparent;
+}
+popover.sliver-dock-popover > contents {
+    background-color: alpha(@tn_bg, 0.94);
+    color: @tn_fg;
+    border-radius: 10px;
+    border: 1px solid alpha(@tn_purple, 0.35);
+    padding: 6px;
+}
+popover.sliver-dock-popover > arrow {
+    background-color: alpha(@tn_bg, 0.94);
+    border: 1px solid alpha(@tn_purple, 0.35);
+}
+
+/* Battery time-remaining label — text is set in Rust per-tap from
+ * battery::format_battery_status. */
+.sliver-dock-battery-label {
+    color: @tn_fg;
+    font-size: 11px;
+}
+
+/* Calendar inside the clock popover. GTK4's Calendar is composed of a
+ * header (month label + nav buttons) and a grid of day buttons. We tint
+ * to read as part of the TN palette without recolouring every subnode. */
+.sliver-dock-calendar {
+    background-color: transparent;
+    color: @tn_fg;
+}
+.sliver-dock-calendar > header {
+    color: @tn_fg;
+}
+.sliver-dock-calendar > header label {
+    color: @tn_fg;
+    font-weight: 600;
+}
+.sliver-dock-calendar > header button {
+    background: transparent;
+    background-image: none;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    color: @tn_fg;
+    padding: 2px 6px;
+    min-height: 0;
+    min-width: 0;
+}
+.sliver-dock-calendar > header button:hover {
+    background-color: alpha(@tn_purple, 0.18);
+    border-radius: 6px;
+}
+.sliver-dock-calendar > grid label {
+    color: @tn_fg;
+}
+.sliver-dock-calendar > grid label.day-name,
+.sliver-dock-calendar > grid label.week-number {
+    color: @tn_comment;
+    font-size: 10px;
+}
+.sliver-dock-calendar > grid label.other-month {
+    color: alpha(@tn_fg, 0.35);
+}
+.sliver-dock-calendar > grid label.today {
+    color: @tn_blue;
+    font-weight: 600;
+}
+.sliver-dock-calendar > grid label:selected {
+    background-color: alpha(@tn_purple, 0.45);
+    border-radius: 4px;
+}

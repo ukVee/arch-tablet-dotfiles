@@ -1,0 +1,34 @@
+pinned = [
+  "firefox",
+  "code-oss",
+  "foot",
+  "com.libretro.RetroArch",
+  "com.valvesoftware.SteamLink",
+  "vesktop",
+]
+
+# Hide everything else from the default-visible roster so only the pinned six
+# show. Keeping the pre-existing avahi/cmake suppressions at the top.
+hidden = [
+  "avahi-discover",
+  "bssh",
+  "bvnc",
+  "cmake-gui",
+  "nm-connection-editor",
+  "btop",
+  "footclient",
+  "foot-server",
+  "kitty",
+  "cups",
+  "nvim",
+  "system-config-printer",
+  "assistant",
+  "qdbusviewer",
+  "linguist",
+  "qv4l2",
+  "qvidcap",
+  "designer",
+  "wcm",
+  "xgps",
+  "xgpsspeed",
+]

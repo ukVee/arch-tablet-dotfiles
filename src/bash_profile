@@ -3,6 +3,7 @@
 #
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
-if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-  exec wayfire
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+  systemctl --user start --wait wayfire.service
+  systemctl --user exit
 fi

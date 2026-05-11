@@ -1,0 +1,320 @@
+/* swipe-panel stylesheet — rendered by toml-bombadil.
+ *
+ * Palette flows in via the `tn` vars table; retheme the panel by
+ * editing vars/tokyo-night-dark.toml (or -light) and re-running
+ * `bombadil link`. Class names are owned by panel-daemon
+ * (layout.rs / now_playing.rs / weather_card.rs) — grep there when
+ * adding a new widget. */
+
+@define-color tn_bg #{{tn.bg}};
+@define-color tn_fg #{{tn.fg}};
+@define-color tn_purple #{{tn.purple}};
+
+/* Window is transparent so .panel-root's rounded corners fall onto the
+ * desktop instead of a theme background. Top corners stay square — the
+ * drawer is meant to read as emerging from behind the screen bezel. */
+window.swipe-panel {
+    background: transparent;
+}
+.panel-root {
+    background-color: alpha(@tn_bg, 0.92);
+    border-radius: 0 0 16px 16px;
+    color: @tn_fg;
+}
+
+/* Left nav column carries its own bottom-left radius so both halves of
+ * the drawer round against the desktop in lockstep. */
+.left-col {
+    background-color: alpha(@tn_purple, 0.18);
+    border-radius: 0 0 0 16px;
+    padding: 8px 0;
+}
+.side-btn {
+    background: transparent;
+    background-image: none;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    min-width: 35px;
+    min-height: 35px;
+    color: @tn_fg;
+}
+.side-btn:hover {
+    background-color: alpha(@tn_purple, 0.28);
+}
+.side-btn:active,
+.side-btn:checked {
+    background-color: alpha(@tn_purple, 0.45);
+}
+.side-btn-icon {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 16px;
+}
+
+.view-top,
+.view-bottom {
+    padding: 12px;
+}
+.view-divider {
+    background-color: alpha(@tn_fg, 0.12);
+}
+.view-placeholder {
+    color: alpha(@tn_fg, 0.45);
+    font-style: italic;
+}
+
+/* Master-menu — replaces the v1 placeholder shortcut grid. Class names
+ * owned by panel-daemon/src/master_menu.rs. Tile + spacing dimensions
+ * are tuned alongside `TILE_PX` in master_menu.rs to keep the grid
+ * narrower than the split page's natural width — see the comment on
+ * that constant. */
+.master-grid {
+    padding: 6px;
+}
+.master-tile {
+    background: transparent;
+    background-image: none;
+    border-image: none;
+    box-shadow: none;
+    border: 1px solid alpha(@tn_purple, 0.35);
+    border-radius: 10px;
+    color: @tn_fg;
+    padding: 4px;
+    min-width: 50px;
+    min-height: 50px;
+}
+.master-tile:hover {
+    background-color: alpha(@tn_purple, 0.18);
+}
+.master-tile:active {
+    background-color: alpha(@tn_purple, 0.30);
+}
+.master-tile-glyph {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 18px;
+}
+.master-tile-label {
+    font-size: 8px;
+    color: alpha(@tn_fg, 0.75);
+}
+/* Status dot is invisible by default; per-tile backends in M3+ flip the
+ * `.on` class on the same Label to surface live state. The Label itself
+ * is empty — we draw the dot via background-color + min-width/height +
+ * border-radius rather than relying on a glyph (M4 fix: the `color`-only
+ * approach inherited from M1 stub never rendered). */
+.master-tile-status {
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 3px;
+    background-color: transparent;
+}
+.master-tile-status.on {
+    background-color: @tn_purple;
+}
+.master-detail {
+    padding: 12px;
+}
+.master-detail-header {
+    margin-bottom: 6px;
+}
+.master-detail-back {
+    background: transparent;
+    background-image: none;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 4px 10px;
+    color: @tn_fg;
+    border-radius: 8px;
+    min-height: 0;
+}
+.master-detail-back:hover {
+    background-color: alpha(@tn_purple, 0.18);
+}
+.master-detail-back-icon {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 14px;
+}
+.master-detail-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: @tn_fg;
+}
+.master-detail-placeholder {
+    color: alpha(@tn_fg, 0.45);
+    font-style: italic;
+}
+
+/* Master-detail list scaffolding — used by tiles whose detail card is a
+ * scrollable vertical list (M4 WiFi APs, M4 Bluetooth devices). The
+ * outer ScrolledWindow is height-pinned in Rust (`scroll_list_shell` in
+ * master_menu/tiles.rs); CSS only owns row look-and-feel. Rows are
+ * Buttons so they pick up GTK's hover/active machinery without our own
+ * gesture wiring. */
+.master-detail-list {
+    /* Inner GtkBox holding row buttons; spacing comes from the box's
+     * own gap (2px), not margins here. */
+}
+.master-list-row {
+    background: transparent;
+    background-image: none;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: @tn_fg;
+    min-height: 0;
+}
+.master-list-row:hover {
+    background-color: alpha(@tn_purple, 0.18);
+}
+.master-list-row:active {
+    background-color: alpha(@tn_purple, 0.30);
+}
+.master-list-row.active {
+    color: @tn_purple;
+    font-weight: 600;
+}
+.master-list-row.unknown {
+    color: alpha(@tn_fg, 0.4);
+    opacity: 0.7;
+}
+.master-list-row.unknown:hover {
+    background-color: transparent;
+}
+.master-list-row-label {
+    font-size: 11px;
+}
+.master-list-row-signal {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 10px;
+    color: alpha(@tn_fg, 0.6);
+}
+.master-list-row-check {
+    font-size: 12px;
+    color: @tn_purple;
+}
+.master-list-empty {
+    color: alpha(@tn_fg, 0.45);
+    font-style: italic;
+    font-size: 11px;
+}
+
+/* Brightness detail card — a Nerd Font sun glyph above a horizontal
+ * Gtk::Scale. Class names owned by panel-daemon/src/master_menu/tiles/
+ * brightness.rs. The slider trough/highlight inherit the GTK theme;
+ * we only retint the highlight to tokyo-night purple so it reads as
+ * part of the panel rather than the system theme. */
+.master-detail-brightness-icon {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 22px;
+    color: @tn_fg;
+}
+.master-detail-brightness-scale trough {
+    min-height: 6px;
+    border-radius: 3px;
+    background-color: alpha(@tn_fg, 0.15);
+}
+.master-detail-brightness-scale highlight {
+    background-color: @tn_purple;
+    border-radius: 3px;
+}
+.master-detail-brightness-scale slider {
+    min-width: 14px;
+    min-height: 14px;
+    background-color: @tn_fg;
+    border-radius: 7px;
+    border: none;
+    box-shadow: none;
+}
+
+/* Scale-from-center transitions for the master-menu inner stack. The
+ * panel-daemon's `master_menu::MenuState::show_detail/show_grid` toggles
+ * `.entering` / `.exiting` on the relevant page and schedules the
+ * Stack's visible-child swap to land between the two animations
+ * (EXIT_MS and ENTER_MS in master_menu.rs — keep the durations here in
+ * sync). The grid uses a subtle 0.85 scale (it recedes); detail pages
+ * scale from 0.5 (they're the focus). `forwards` holds the end-state so
+ * the swap can happen before the class is removed without flicker. */
+@keyframes master-grid-exiting {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.85); }
+}
+@keyframes master-grid-entering {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes master-detail-exiting {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.5); }
+}
+@keyframes master-detail-entering {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: scale(1); }
+}
+.master-grid.exiting {
+    animation: master-grid-exiting 150ms ease-in forwards;
+    transform-origin: 50% 50%;
+}
+.master-grid.entering {
+    animation: master-grid-entering 180ms ease-out forwards;
+    transform-origin: 50% 50%;
+}
+.master-detail.exiting {
+    animation: master-detail-exiting 150ms ease-in forwards;
+    transform-origin: 50% 50%;
+}
+.master-detail.entering {
+    animation: master-detail-entering 180ms ease-out forwards;
+    transform-origin: 50% 50%;
+}
+
+/* Weather card */
+.wx-glyph {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 40px;
+    color: @tn_fg;
+}
+.wx-temp {
+    font-size: 22px;
+    font-weight: 600;
+}
+.wx-feels {
+    color: alpha(@tn_fg, 0.7);
+    font-size: 11px;
+}
+.wx-location {
+    color: alpha(@tn_fg, 0.65);
+    font-size: 11px;
+}
+.wx-forecast {
+    margin-top: 4px;
+}
+.wx-fc-day {
+    font-size: 10px;
+    color: alpha(@tn_fg, 0.7);
+}
+.wx-fc-glyph {
+    font-family: 'FiraCode Nerd Font';
+    font-size: 16px;
+}
+.wx-fc-hilo {
+    font-size: 10px;
+    color: alpha(@tn_fg, 0.8);
+}
+
+/* Time slider: no thumb, ever. It still accepts click/drag, but we
+ * don't advertise that affordance — the bar reads as pure progress. */
+scale.np-time-slider slider {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}

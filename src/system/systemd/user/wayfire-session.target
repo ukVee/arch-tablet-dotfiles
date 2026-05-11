@@ -1,0 +1,5 @@
+[Unit]
+Description=Wayfire compositor session
+BindsTo=graphical-session.target
+Wants=mako.service swayidle.service polkit-gnome-authentication-agent-1.service swipe-panel.service sliver-dock.service
+After=wayfire.service

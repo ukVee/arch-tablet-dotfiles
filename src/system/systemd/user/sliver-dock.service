@@ -1,0 +1,12 @@
+[Unit]
+Description=Sliver-dock bottom bar daemon
+Documentation=file://%h/projects/sliver-dock/CLAUDE.md
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/sliver-dock
+Restart=always
+RestartSec=2s

@@ -1,0 +1,18 @@
+# weather-core config — read by libweather-core via weather_core_config_load().
+# File mode MUST be 0600 (api_key is a secret). A bombadil posthook chmods
+# this after link; if you edit the installed copy directly, re-run `chmod 0600`.
+#
+# Location is NOT set here — it's resolved dynamically by the NetworkManager
+# dispatcher (see src/system/NetworkManager/dispatcher.d/50-weather-location)
+# which writes ~/.config/weather-core/location based on the current SSID.
+#
+# Keys:
+#   api_key   — Tomorrow.io API key. Leave blank to use wttr.in only.
+#   units     — metric | imperial
+#   max_age   — cache-freshness window in seconds (default 3600)
+#   offline   — 0 | 1 — when 1, cache-only, no network ever
+
+api_key  = {{secrets.weather_api_key}}
+units    = metric
+max_age  = 3600
+offline  = 0

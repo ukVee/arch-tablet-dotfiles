@@ -1,27 +1,35 @@
 /* gtklock style — tokyo-night palette via toml-bombadil tera templates.
-   Sizing is deliberately conservative: the module already calls
-   gtk_widget_set_size_request on the numpad buttons, so CSS here only
-   layers on typography and color. No min-width/min-height rules. */
+   GTK3 CSS does NOT accept 8-digit hex (#rrggbbaa). For transparency we
+   declare @define-color names, then use alpha(@name, fraction) — alpha()
+   works on color references but not on raw hex literals. */
+
+@define-color tn_bg      #{{tn.bg}};
+@define-color tn_bg_hl   #{{tn.bg_hl}};
+@define-color tn_fg      #{{tn.fg}};
+@define-color tn_fg_dark #{{tn.fg_dark}};
+@define-color tn_blue    #{{tn.blue}};
+@define-color tn_red     #{{tn.red}};
+@define-color tn_yellow  #{{tn.yellow}};
 
 window {
-    background-color: #{{tn.bg}}eb;   /* tn.bg @ ~92% */
+    background-color: alpha(@tn_bg, 0.92);
 }
 
 /* Clock / date */
 #clock-label {
     font-size: 72px;
     font-weight: 300;
-    color: #{{tn.fg}};
+    color: @tn_fg;
 }
 #date-label {
     font-size: 18px;
-    color: #{{tn.fg_dark}};
+    color: @tn_fg_dark;
 }
 
 /* Password prompt label (hidden by the module, kept styled for completeness) */
 #input-label {
     font-size: 16px;
-    color: #{{tn.fg}};
+    color: @tn_fg;
 }
 
 /* Password entry */
@@ -29,23 +37,27 @@ window {
     font-size: 22px;
     padding: 8px 14px;
     border-radius: 10px;
-    background-color: #{{tn.bg_hl}};
-    color: #{{tn.fg}};
-    border: 2px solid alpha(#{{tn.blue}}, 0.25);
-    caret-color: #{{tn.blue}};
+    background-color: @tn_bg_hl;
+    background-image: none;
+    color: @tn_fg;
+    border: 2px solid alpha(@tn_blue, 0.25);
+    border-image: none;
+    box-shadow: none;
+    caret-color: @tn_blue;
 }
 #input-field:focus {
-    border-color: alpha(#{{tn.blue}}, 0.70);
+    border-color: alpha(@tn_blue, 0.7);
+    box-shadow: none;
 }
 
 /* Errors / warnings */
 #error-label {
     font-size: 14px;
-    color: #{{tn.red}};
+    color: @tn_red;
 }
 #warning-label {
     font-size: 14px;
-    color: #{{tn.yellow}};
+    color: @tn_yellow;
 }
 
 /* Unlock button (hidden by the module) */
@@ -65,22 +77,191 @@ button.numpad-btn {
     font-weight: 500;
     border-radius: 14px;
     padding: 0;
-    color: #{{tn.fg}};
-    background-color: alpha(#{{tn.fg}}, 0.06);
-    border: 1px solid alpha(#{{tn.fg}}, 0.10);
+    color: @tn_fg;
+    background-color: alpha(@tn_fg, 0.06);
+    background-image: none;
+    border: 1px solid alpha(@tn_fg, 0.10);
+    border-image: none;
+    box-shadow: none;
+    text-shadow: none;
 }
 button.numpad-btn:hover {
-    background-color: alpha(#{{tn.fg}}, 0.14);
+    background-color: alpha(@tn_fg, 0.14);
 }
 button.numpad-btn:active {
-    background-color: alpha(#{{tn.blue}}, 0.32);
+    background-color: alpha(@tn_blue, 0.32);
 }
 
 button.numpad-btn.numpad-special {
-    color: #{{tn.blue}};
-    background-color: alpha(#{{tn.blue}}, 0.14);
-    border-color: alpha(#{{tn.blue}}, 0.22);
+    color: @tn_blue;
+    background-color: alpha(@tn_blue, 0.14);
+    border-color: alpha(@tn_blue, 0.22);
 }
 button.numpad-btn.numpad-special:hover {
-    background-color: alpha(#{{tn.blue}}, 0.26);
+    background-color: alpha(@tn_blue, 0.26);
+}
+
+/* --- Weather widget ---
+   Info-dense layout: current (icon + temp/cond/feels) · stats row ·
+   day/night dynamic row · 5-day forecast strip. */
+.weather-widget {
+    padding: 20px 16px;
+    background-color: alpha(@tn_bg_hl, 0.35);
+    background-image: none;
+}
+.weather-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 84px;
+    color: @tn_fg;
+    margin-right: 20px;
+}
+.weather-temp {
+    font-size: 60px;
+    font-weight: 300;
+    color: @tn_fg;
+}
+.weather-cond {
+    font-size: 15px;
+    color: @tn_fg;
+}
+.weather-feels {
+    font-size: 12px;
+    color: @tn_fg_dark;
+}
+
+/* Stats column — humidity / wind / precip, stacked top-right */
+.weather-stat {
+    font-family: "FiraCode Nerd Font";
+    font-size: 13px;
+    color: @tn_fg_dark;
+}
+
+/* Day/night dynamic row — sun+UV+sunset or moon+sunrise */
+.weather-dyn-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 16px;
+    color: @tn_blue;
+    margin-right: 4px;
+}
+.weather-dyn-text {
+    font-family: "FiraCode Nerd Font";
+    font-size: 13px;
+    color: @tn_fg_dark;
+}
+
+/* 5-day forecast strip */
+.weather-forecast {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid alpha(@tn_fg, 0.12);
+}
+.weather-fc-day {
+    font-size: 11px;
+    font-weight: 500;
+    color: @tn_fg_dark;
+}
+.weather-fc-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 22px;
+    color: @tn_fg;
+}
+.weather-fc-hilo {
+    font-size: 11px;
+    color: @tn_fg_dark;
+}
+
+/* --- MPRIS widget --- */
+.mpris-widget {
+    padding: 24px;
+    background-color: alpha(@tn_bg_hl, 0.35);
+    background-image: none;
+}
+.mpris-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 72px;
+    color: @tn_fg;
+}
+.mpris-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: @tn_fg;
+}
+.mpris-artist {
+    font-size: 13px;
+    color: @tn_fg_dark;
+}
+.mpris-time {
+    font-size: 11px;
+    color: @tn_fg_dark;
+}
+.mpris-vol-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 16px;
+    color: @tn_fg_dark;
+}
+scale.mpris-time-slider trough,
+scale.mpris-vol-slider trough {
+    background-color: alpha(@tn_fg, 0.15);
+    background-image: none;
+    border: none;
+    min-height: 4px;
+    border-radius: 2px;
+}
+scale.mpris-time-slider highlight,
+scale.mpris-vol-slider highlight {
+    background-color: @tn_blue;
+    background-image: none;
+    border: none;
+    border-radius: 2px;
+}
+scale.mpris-time-slider slider,
+scale.mpris-vol-slider slider {
+    background-color: @tn_fg;
+    background-image: none;
+    border: none;
+    border-radius: 50%;
+    min-width: 14px;
+    min-height: 14px;
+    margin: -6px 0;
+    box-shadow: none;
+}
+/* Unseekable tracks (Firefox web media, missing CanSeek) land the time slider
+ * in :disabled — drop the thumb entirely so it reads as a progress bar, not
+ * a broken control. */
+scale.mpris-time-slider:disabled slider {
+    background-color: transparent;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+}
+scale.mpris-time-slider:disabled highlight {
+    background-color: alpha(@tn_blue, 0.6);
+}
+button.mpris-btn {
+    background-color: alpha(@tn_fg, 0.06);
+    background-image: none;
+    border: 1px solid alpha(@tn_fg, 0.10);
+    border-image: none;
+    border-radius: 50%;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+button.mpris-btn:hover {
+    background-color: alpha(@tn_fg, 0.14);
+}
+button.mpris-btn:active,
+button.mpris-btn.mpris-play {
+    background-color: alpha(@tn_blue, 0.32);
+    border-color: alpha(@tn_blue, 0.40);
+}
+button.mpris-btn:disabled {
+    opacity: 0.4;
+}
+.mpris-btn-icon {
+    font-family: "FiraCode Nerd Font";
+    font-size: 20px;
+    color: @tn_fg;
 }
